@@ -1,10 +1,10 @@
 
 
-const ARENA_SIZE:usize = 1024;
+arena_size_macro::arena_size!();
 
 
 
-type ArenaSector = Box<[u8;ARENA_SIZE]>;
+type ArenaSector = Box<[u8;ARENA_SIZE as usize]>;
 
 // todo 
 // get ptr as *mut Option<Box<ArenaSector>>
@@ -43,7 +43,7 @@ impl ReadSector {
     pub fn read(&self) -> Vec<u8>{
 
         let mut v = Vec::new();
-        let sector: &mut Box<[u8; 1024]> = unsafe {self.sector.as_mut().unwrap()};
+        let sector: &mut Box<[u8; ARENA_SIZE]> = unsafe {self.sector.as_mut().unwrap()};
         for x in self.start..self.len{
             v.push(sector[x]);
         }
@@ -282,6 +282,7 @@ mod tests{
         let mut a = Arena::new();
         let v = [1_u8;ARENA_SIZE / 2].to_vec();
         a.write(20, v);
+        println!("{:?}",a); 
          
     }
     
@@ -315,7 +316,7 @@ mod tests{
     #[test]
     fn malloc_test(){
         let mut a = Box::new([2_u8;ARENA_SIZE]);
-        let b = &mut a as *mut Box<[u8; 1024]> as usize as *mut &mut [u8; 1024];
+        let b = &mut a as *mut Box<[u8; ARENA_SIZE]> as usize as *mut &mut [u8; ARENA_SIZE];
         unsafe {
             let c = b.as_mut().unwrap();
             for x in 0..101_u8{
