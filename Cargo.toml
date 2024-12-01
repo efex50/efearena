@@ -3,4 +3,8 @@ name = "efearena"
 version = "0.1.0"
 edition = "2021"
 
+[workspace]
+members = ["arena_size_macro"]
+
 [dependencies]
+arena_size_macro = { path="./arena_size_macro" }
